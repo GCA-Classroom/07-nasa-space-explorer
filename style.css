@@ -1,3 +1,6 @@
+/* Use NASA’s official colors and typefaces (e.g. Inter, Public Sans, Helvetica, Source Sans Pro) 
+to align with NASA’s design system */
+
 /* Global reset & box sizing */
 * {
   box-sizing: border-box;
@@ -122,10 +125,16 @@ button:hover {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease; /* Smooth scaling effect */
+}
+
+.gallery-item img:hover {
+  transform: scale(1.04); /* Slightly enlarge image on hover */
 }
 
 .gallery-item p {
-  margin-top: 10px;
+  margin-top: 0px;
   padding: 5px;
   font-size: 14px;
 }
@@ -141,4 +150,74 @@ button:hover {
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+/* Modal styles */
+#imageModal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  align-items: center;
+  justify-content: center;
+}
+
+#imageModal .modal-content {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90vw;
+  padding: 30px 20px 20px 20px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#imageModal .modal-img {
+  width: 100%;
+  max-height: 350px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+
+#imageModal .modal-title {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+#imageModal .modal-date {
+  color: #555;
+  font-size: 1em;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+#imageModal .modal-explanation {
+  font-size: 1em;
+  color: #222;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+#imageModal .close-button {
+  position: absolute;
+  top: 10px;
+  right: 18px;
+  font-size: 2em;
+  color: #888;
+  cursor: pointer;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+#imageModal .close-button:hover {
+  color: #222;
 }
