@@ -7,7 +7,7 @@
 
 /* Base page styles */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Inter', 'Public Sans', 'Helvetica', 'Source Sans Pro', Arial, sans-serif;
   background-color: #f1f1f1;
   padding: 20px;
 }
@@ -101,20 +101,26 @@ button:hover {
   flex: 1 1 100%;  /* full width by default */
   min-width: 280px;
   max-width: 500px;
-  background: white;
+  background: #f4f4f4; /* NASA light grey */
   padding: 10px;
+  border: 2px solid #2056ae; /* NASA blue */
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(32,86,174,0.08);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  color: #fc3d21; /* NASA red for text */
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.gallery-item:hover {
+  transform: scale(1.04) rotate(-1deg);
+  box-shadow: 0 6px 24px rgba(32,86,174,0.18);
+  border-color: #fc3d21; /* NASA red on hover */
 }
 
-/* Three columns on wider screens */
-@media (min-width: 1000px) {
-  .gallery-item {
-    flex: 0 1 31%;
-  }
+.gallery-item div, .gallery-item p {
+  color: #fc3d21;
+  font-family: 'Inter', 'Public Sans', 'Helvetica', 'Source Sans Pro', Arial, sans-serif;
 }
 
 .gallery-item img {
@@ -141,4 +147,42 @@ button:hover {
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+/* Modal NASA style */
+#modalContent {
+  border: 2px solid #2056ae;
+  font-family: 'Inter', 'Public Sans', 'Helvetica', 'Source Sans Pro', Arial, sans-serif;
+}
+#closeModal {
+  color: #fc3d21 !important;
+}
+
+/* Loading message style */
+#loadingMessage {
+  color: #2056ae;
+  font-size: 1.2em;
+  text-align: center;
+  margin: 30px 0 10px 0;
+  font-family: 'Inter', 'Public Sans', 'Helvetica', 'Source Sans Pro', Arial, sans-serif;
+  /* Center the loading message in the middle of the screen */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(241,241,241,0.7); /* optional: subtle overlay */
+  z-index: 900; /* Lower than didYouKnow */
+}
+#didYouKnow {
+  color: #fc3d21;
+  font-size: 1em;
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: 'Inter', 'Public Sans', 'Helvetica', 'Source Sans Pro', Arial, sans-serif;
+  position: relative;
+  z-index: 1001; /* Higher than loadingMessage */
 }
