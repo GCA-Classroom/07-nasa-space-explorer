@@ -122,6 +122,110 @@ button:hover {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 0.3s ease;
+}
+
+/* Hover Zoom Effect */
+.gallery-item img:hover {
+  transform: scale(1.08);
+}
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90vw;
+  padding: 40px 24px 24px 24px; /* More top padding for close button */
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+  position: relative;
+  font-family: 'Verdana', Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.close-button {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  font-size: 2rem;
+  color: #d04a02;
+  cursor: pointer;
+  font-weight: bold;
+  background: #fff;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  transition: background 0.2s;
+}
+.close-button:hover {
+  background: #ffe5db;
+}
+
+#modal-media img, #modal-media iframe {
+  width: 100%;
+  max-height: 350px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  display: block;
+}
+
+#modal-media a {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: #0b3d91;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-decoration: underline;
+  word-break: break-all;
+}
+/* Make sure links are visible on white background */
+#modal-media a:visited {
+  color: #d04a02;
+}
+
+/* NASA Branding: Use NASA blue and red */
+.site-header, .modal-content {
+  color: #212121;
+}
+
+.site-header {
+  background: #0b3d91;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 0;
+}
+
+.logo {
+  filter: drop-shadow(0 0 2px #fff);
+}
+
+.space-fact {
+  background: #e3e6ea;
+  color: #0b3d91;
+  font-family: 'Verdana', Arial, sans-serif;
+  font-size: 1.1rem;
+  border-left: 6px solid #d04a02;
+  padding: 12px 18px;
+  margin: 0 0 18px 0;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(11,61,145,0.05);
 }
 
 .gallery-item p {
