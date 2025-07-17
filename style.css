@@ -5,17 +5,26 @@
   padding: 0;
 }
 
+/* NASA color variables for easy reuse */
+:root {
+  --nasa-blue: #0032A0;
+  --nasa-red: #E4002B;
+}
+
 /* Base page styles */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
+  font-family: Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, #e9ecf5 0%, #f7faff 100%);
   padding: 20px;
+  font-size: 18px;
+  min-height: 100vh;
 }
 
 /* Centered container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding-bottom: 30px;
 }
 
 /* Header */
@@ -26,18 +35,25 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
   margin-bottom: 20px;
+  background: #f7faff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,50,160,0.04);
 }
 
 h1 {
-  font-family: Verdana, sans-serif;
+  font-family: Helvetica, Verdana, Arial, sans-serif;
   font-weight: bold;
-  color: #212121;
+  color: var(--nasa-blue);
+  font-size: 2.2em;
+  letter-spacing: 2px;
+  text-shadow: none;
 }
 
 /* Logo */
 .logo {
   width: 140px;
   margin-right: 15px;
+  filter: none;
 }
 
 /* Date‐picker & button row */
@@ -53,25 +69,36 @@ h1 {
 /* Inputs and buttons */
 input[type="date"],
 button {
-  font-family: Arial, sans-serif;
-  font-weight: normal;
-  color: #666;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 18px;
   padding: 10px 15px;
-  border: 1px solid #ddd;
+  border: 2px solid var(--nasa-blue);
   border-radius: 4px;
-  font-size: 16px;
   line-height: 1.4;
   width: 100%;
+  background: #f7faff;
+  color: var(--nasa-blue);
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+input[type="date"]:focus {
+  border-color: var(--nasa-red);
+  box-shadow: 0 0 0 2px #E4002B22;
 }
 
 /* Button specific */
 button {
-  background-color: #d3d3d3;
-  color: black;
+  background-color: var(--nasa-blue);
+  color: #fff;
   cursor: pointer;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,50,160,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
 }
 button:hover {
-  background-color: #bfbfbf;
+  background-color: #002266;
+  box-shadow: 0 4px 16px rgba(0,50,160,0.10);
 }
 
 /* Stack horizontally on wider screens */
@@ -80,65 +107,224 @@ button:hover {
     flex-direction: row;
     padding: 0;
   }
-  
   input[type="date"],
   button {
     width: auto;
   }
 }
 
-/* Gallery flex container */
+/* Gallery grid container */
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 20px;
   padding: 20px;
   justify-content: center;
 }
 
+/* Three columns on wider screens */
+@media (min-width: 1000px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .gallery-item {
+    max-width: none;
+  }
+}
+
 /* Gallery items */
 .gallery-item {
-  flex: 1 1 100%;  /* full width by default */
+  flex: 1 1 100%;
   min-width: 280px;
   max-width: 500px;
-  background: white;
+  background: #f7faff;
   padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,50,160,0.06);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s;
+  border: 2px solid #e9ecf5;
 }
 
-/* Three columns on wider screens */
-@media (min-width: 1000px) {
-  .gallery-item {
-    flex: 0 1 31%;
-  }
+.gallery-item:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(0,50,160,0.10);
+  border-color: var(--nasa-blue);
 }
 
 .gallery-item img {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px #0032A033;
 }
 
 .gallery-item p {
   margin-top: 10px;
   padding: 5px;
-  font-size: 14px;
+  font-size: 17px;
+  font-family: Helvetica, Arial, sans-serif;
+  color: var(--nasa-blue);
+  text-align: center;
 }
 
-/* Placeholder content */
+/* Placeholder content (intro/loading/error) spans all columns in grid */
 .placeholder {
+  grid-column: 1 / -1;
   flex: 1 1 100%;
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--nasa-blue);
+  font-size: 20px;
+  font-family: Helvetica, Arial, sans-serif;
+  background: #f7faff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0032A012;
 }
 
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+  color: var(--nasa-red);
 }
+
+/* Modal background */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,50,160,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 18px rgba(0,50,160,0.10);
+  padding: 30px 20px 20px 20px;
+  max-width: 900px;
+  width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Helvetica, Arial, sans-serif;
+  border: 2px solid #e9ecf5;
+}
+
+.modal-img {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  box-shadow: 0 2px 8px #0032A012;
+}
+
+.modal h2 {
+  font-size: 1.5em;
+  font-family: Helvetica, Arial, sans-serif;
+  margin-bottom: 8px;
+  color: var(--nasa-blue);
+  text-align: center;
+  text-shadow: none;
+}
+
+.modal-date,
+.modal-explanation {
+  font-size: 1.1em;
+  font-family: Helvetica, Arial, sans-serif;
+  color: var(--nasa-blue);
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.modal-explanation {
+  color: #444;
+  margin-bottom: 0;
+  text-align: left;
+  padding: 0 4px;
+}
+
+/* Modal close button */
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: var(--nasa-red);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.7em;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  line-height: 1;
+  z-index: 1;
+  box-shadow: 0 2px 8px #E4002B12;
+  transition: background 0.2s;
+}
+.modal-close:hover {
+  background: #b3001b;
+}
+
+/* Did You Know? fact section */
+.space-fact {
+  background: #f7faff;
+  color: var(--nasa-blue);
+  border-radius: 8px;
+  padding: 18px 24px;
+  margin-bottom: 18px;
+  font-size: 1.2em;
+  font-family: Helvetica, Arial, sans-serif;
+  text-align: center;
+  box-shadow: 0 2px 8px #0032A012;
+  border: 2px solid #e9ecf5;
+}
+
+.space-fact-heading {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--nasa-red);
+  font-family: Helvetica, Arial, sans-serif;
+  text-shadow: none;
+}
+
+.space-fact-text {
+  font-size: 1.1em;
+  color: var(--nasa-blue);
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+/* 
+  Notes for beginners:
+  - This CSS file styles a web page with a focus on a gallery and modal component.
+  - It uses Flexbox for layout, with a mobile-first approach.
+  - Media queries adjust the layout for larger screens.
+  - The color scheme is neutral, with a focus on usability and readability.
+  - Comments are provided to explain the purpose of each section and key styles.
+*/
+/*
+  Notes for beginners:
+  - This CSS file styles a web page with a focus on a gallery and modal component.
+  - It uses Flexbox for layout, with a mobile-first approach.
+  - Media queries adjust the layout for larger screens.
+  - The color scheme is neutral, with a focus on usability and readability.
+  - Comments are provided to explain the purpose of each section and key styles.
+*/
+/*
+  - The color scheme is neutral, with a focus on usability and readability.
+  - Comments are provided to explain the purpose of each section and key styles.
+*/
