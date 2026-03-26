@@ -16,7 +16,7 @@
     <div class="filters">
       <input type="date" id="startDate" />
       <input type="date" id="endDate" />
-      <button>Get Space Images</button>
+      <button id="getImagesButton">Get Space Images</button>
     </div>
 
     <div id="gallery" class="gallery">
@@ -26,6 +26,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal for displaying image details -->
+  <div id="imageModal" class="modal" hidden>
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <img id="modalImage" src="" alt="Space Image" class="modal-image" />
+      <div class="modal-info">
+        <h2 id="modalTitle"></h2>
+        <p id="modalDate"></p>
+        <div id="modalVideo"></div>
+        <p id="modalExplanation"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <h2>Space Fun Fact</h2>
+    <p id="funFactText">Refresh the page to discover a cool fact about space.</p>
+  </footer>
 
   <script src="js/dateRange.js"></script>
   <script src="js/script.js"></script>
