@@ -108,6 +108,13 @@ button:hover {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
 }
 
 /* Three columns on wider screens */
@@ -122,6 +129,12 @@ button:hover {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 0.35s ease;
+  transform-origin: center;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.06);
 }
 
 .gallery-item p {
@@ -141,4 +154,110 @@ button:hover {
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+/* Random space fact section */
+.space-fact {
+  margin: 0 20px 10px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #ffffff;
+  border-left: 6px solid #a6a6a6;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+.space-fact h2 {
+  font-size: 20px;
+  color: #212121;
+  margin-bottom: 8px;
+}
+
+.space-fact p {
+  color: #333;
+  line-height: 1.5;
+}
+
+@media (min-width: 600px) {
+  .space-fact {
+    margin: 0 0 10px;
+  }
+}
+
+/* Modal */
+.hidden {
+  display: none;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.modal-content {
+  position: relative;
+  width: min(900px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: #d3d3d3;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.modal-close:hover {
+  background: #bfbfbf;
+}
+
+.modal-image {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.modal-title {
+  margin-top: 14px;
+  color: #212121;
+}
+
+.modal-date {
+  margin-top: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+.modal-explanation {
+  margin-top: 12px;
+  line-height: 1.6;
+  color: #333;
 }
