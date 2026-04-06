@@ -12,6 +12,9 @@ const modalExplanation = document.getElementById('modalExplanation');
 const spaceFactText = document.getElementById('spaceFactText');
 
 let currentImageItems = [];
+let spaceFactRotationTimer = null;
+let spaceFactOrder = [];
+let spaceFactOrderIndex = 0;
 
 // Your personal NASA API key
 const apiKey = 'd7kQnA7D3ekxe6nr2h4eFvyQeJUV3Q5uM1lpgbbU';
@@ -29,19 +32,59 @@ const spaceFacts = [
 	'Saturn could float in water because its average density is lower than water.'
 ];
 
+function shuffleSpaceFacts() {
+	spaceFactOrder = spaceFacts.map((_, index) => index);
+
+	for (let index = spaceFactOrder.length - 1; index > 0; index -= 1) {
+		const swapIndex = Math.floor(Math.random() * (index + 1));
+		const temporaryValue = spaceFactOrder[index];
+		spaceFactOrder[index] = spaceFactOrder[swapIndex];
+		spaceFactOrder[swapIndex] = temporaryValue;
+	}
+
+	spaceFactOrderIndex = 0;
+}
+
+function displaySpaceFact(index) {
+	spaceFactText.classList.add('space-fact-text--hidden');
+
+	window.setTimeout(() => {
+		spaceFactText.textContent = spaceFacts[index];
+		spaceFactText.classList.remove('space-fact-text--hidden');
+	}, 180);
+}
+
+function getNextSpaceFactIndex() {
+	if (spaceFactOrder.length === 0 || spaceFactOrderIndex >= spaceFactOrder.length) {
+		shuffleSpaceFacts();
+	}
+
+	const nextIndex = spaceFactOrder[spaceFactOrderIndex];
+	spaceFactOrderIndex += 1;
+	return nextIndex;
+}
+
+function showNextSpaceFact() {
+	displaySpaceFact(getNextSpaceFactIndex());
+}
+
+function startSpaceFactRotation() {
+	shuffleSpaceFacts();
+	showNextSpaceFact();
+
+	spaceFactRotationTimer = window.setInterval(() => {
+		showNextSpaceFact();
+	}, 8000);
+}
+
 // Call the setupDateInputs function from dateRange.js
 // This sets up the date pickers to:
 // - Default to a range of 9 days (from 9 days ago to today)
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
 
-// Show one random fact each time the page loads
-function showRandomSpaceFact() {
-	const randomIndex = Math.floor(Math.random() * spaceFacts.length);
-	spaceFactText.textContent = spaceFacts[randomIndex];
-}
-
-showRandomSpaceFact();
+// Show a fact right away, then keep rotating through the full list.
+startSpaceFactRotation();
 
 // Build one gallery card for each APOD item
 function createGalleryCard(item, index) {

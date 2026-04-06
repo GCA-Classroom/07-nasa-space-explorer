@@ -158,28 +158,74 @@ button:hover {
 
 /* Random space fact section */
 .space-fact {
+  position: relative;
+  overflow: hidden;
   margin: 0 20px 10px;
-  padding: 16px;
-  border-radius: 8px;
-  background: #ffffff;
-  border-left: 6px solid #a6a6a6;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+  padding: 18px 18px 18px 22px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f4f8ff 100%);
+  border: 1px solid rgba(118, 140, 176, 0.24);
+  border-left: 6px solid #5671a6;
+  box-shadow: 0 10px 24px rgba(37, 52, 84, 0.08);
+}
+
+.space-fact::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(86, 113, 166, 0.18) 0%, rgba(86, 113, 166, 0) 70%);
+  pointer-events: none;
 }
 
 .space-fact h2 {
-  font-size: 20px;
-  color: #212121;
-  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #3d4f77;
+  margin-bottom: 10px;
+}
+
+.space-fact h2::before {
+  content: '✦';
+  font-size: 14px;
+  color: #5671a6;
 }
 
 .space-fact p {
+  position: relative;
+  z-index: 1;
+  max-width: 70ch;
+  font-size: 1.02rem;
+  font-weight: 500;
   color: #333;
-  line-height: 1.5;
+  line-height: 1.7;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.space-fact-text--hidden {
+  opacity: 0;
+  transform: translateY(4px);
 }
 
 @media (min-width: 600px) {
   .space-fact {
     margin: 0 0 10px;
+    padding: 20px 22px 20px 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .space-fact p {
+    transition: none;
   }
 }
 
