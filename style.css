@@ -8,8 +8,17 @@
 /* Base page styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
+  background-color: #0b0f18;
+  background-image: url('https://cdn.esawebb.org/archives/images/screen/potm2504a.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
   padding: 20px;
+}
+
+body.modal-open {
+  overflow: hidden;
 }
 
 /* Centered container */
@@ -31,7 +40,7 @@ body {
 h1 {
   font-family: Verdana, sans-serif;
   font-weight: bold;
-  color: #212121;
+  color: #ffffff;
 }
 
 /* Logo */
@@ -89,45 +98,94 @@ button:hover {
 
 /* Gallery flex container */
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 12px;
 }
 
 /* Gallery items */
 .gallery-item {
-  flex: 1 1 100%;  /* full width by default */
-  min-width: 280px;
-  max-width: 500px;
   background: white;
-  padding: 10px;
+  padding: 8px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.gallery-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.16);
+}
+
+.image-card {
+  cursor: pointer;
+}
+
+/* Two columns on tablets */
+@media (min-width: 700px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* Three columns on wider screens */
-@media (min-width: 1000px) {
+@media (min-width: 1050px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .gallery-item {
-    flex: 0 1 31%;
+    min-height: 320px;
   }
 }
 
 .gallery-item img {
   width: 100%;
-  height: 200px;
+  height: 145px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 0.25s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.04);
 }
 
 .gallery-item p {
-  margin-top: 10px;
-  padding: 5px;
-  font-size: 14px;
+  margin-top: 6px;
+  padding: 2px;
+  font-size: 12px;
+}
+
+.gallery-item h2 {
+  margin-top: 8px;
+  font-size: 15px;
+  color: #212121;
+}
+
+.apod-date {
+  font-size: 12px;
+  font-weight: bold;
+  color: #444;
+  margin-top: 4px;
+}
+
+.nasa-fact {
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #2f2f2f;
+}
+
+.box-placeholder {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
 }
 
 /* Placeholder content */
@@ -141,4 +199,64 @@ button:hover {
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+.image-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.image-modal.show {
+  display: flex;
+}
+
+.image-modal-content {
+  width: min(900px, 96vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  position: relative;
+}
+
+.close-modal-btn {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  border: none;
+  background: #f1f1f1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+#modalImage {
+  width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #111;
+}
+
+#modalTitle {
+  margin-top: 12px;
+  font-size: 20px;
+  color: #1c1c1c;
+}
+
+.modal-description {
+  margin-top: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #2a2a2a;
 }
