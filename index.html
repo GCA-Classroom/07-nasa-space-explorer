@@ -19,11 +19,32 @@
       <button>Get Space Images</button>
     </div>
 
+    <!-- Random space fact -->
+    <section id="didYouKnow" class="did-you-know" aria-live="polite">
+      <strong>Did You Know?</strong>
+      <p class="did-you-know-text">Loading a space fact…</p>
+    </section>
+
     <div id="gallery" class="gallery">
       <div class="placeholder">
         <div class="placeholder-icon">🔭</div>
         <p>Select a date range and click "Get Space Images" to explore the cosmos!</p>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="modalClose" class="modal-close" aria-label="Close">✖</button>
+
+      <div id="modalMedia" class="modal-media"></div>
+
+      <h2 id="modalTitle"></h2>
+
+      <p id="modalDate" class="modal-date"></p>
+
+      <p id="modalExplanation" class="modal-explanation"></p>
     </div>
   </div>
 

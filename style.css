@@ -5,17 +5,33 @@
   padding: 0;
 }
 
+:root {
+  --bg: #0b1220; /* dark page background */
+  --card-bg: #071224; /* slightly lighter card background */
+  --text: #ffffff; /* main text color */
+  --muted: #9aa7b2; /* secondary text */
+  --nasa-red: #CE1126; /* NASA red for buttons */
+  --surface-shadow: rgba(0,0,0,0.6);
+}
+
 /* Base page styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
-  padding: 20px;
+  background-color: var(--bg);
+  color: var(--text);
+  padding: 28px;
+  -webkit-font-smoothing:antialiased;
 }
 
 /* Centered container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+.container {
+  padding-left: 18px;
+  padding-right: 18px;
 }
 
 /* Header */
@@ -28,10 +44,16 @@ body {
   margin-bottom: 20px;
 }
 
+.site-header {
+  gap: 12px;
+  justify-content: flex-start;
+  padding-left: 12px;
+}
+
 h1 {
   font-family: Verdana, sans-serif;
   font-weight: bold;
-  color: #212121;
+  color: var(--text);
 }
 
 /* Logo */
@@ -40,14 +62,37 @@ h1 {
   margin-right: 15px;
 }
 
+.logo {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
 /* Date‐picker & button row */
 .filters {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 20px;
-  padding: 0 20px;
+  margin-bottom: 22px;
+  padding: 0 12px;
+}
+
+/* Did You Know section */
+.did-you-know {
+  background: linear-gradient(90deg, #ffffff, #f7fbff);
+  border: 1px solid #e6eef8;
+  padding: 12px 16px;
+  margin: 0 20px 20px 20px;
+  border-radius: 8px;
+  color: #0b3d91;
+}
+.did-you-know strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.did-you-know-text {
+  font-size: 16px;
+  color: #333;
 }
 
 /* Inputs and buttons */
@@ -55,23 +100,25 @@ input[type="date"],
 button {
   font-family: Arial, sans-serif;
   font-weight: normal;
-  color: #666;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
+  color: var(--text);
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 8px;
+  font-size: 15px;
   line-height: 1.4;
   width: 100%;
+  background: transparent;
 }
 
 /* Button specific */
 button {
-  background-color: #d3d3d3;
-  color: black;
+  background-color: var(--nasa-red);
+  color: white;
   cursor: pointer;
+  border: none;
 }
 button:hover {
-  background-color: #bfbfbf;
+  background-color: #a10e1f;
 }
 
 /* Stack horizontally on wider screens */
@@ -96,18 +143,24 @@ button:hover {
   justify-content: center;
 }
 
+.gallery {
+  padding: 24px 12px;
+}
+
 /* Gallery items */
 .gallery-item {
-  flex: 1 1 100%;  /* full width by default */
+  flex: 1 1 100%;
   min-width: 280px;
   max-width: 500px;
-  background: white;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  background: var(--card-bg);
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px var(--surface-shadow);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.03);
 }
 
 /* Three columns on wider screens */
@@ -121,7 +174,15 @@ button:hover {
   width: 100%;
   height: 200px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
+  transition: transform 260ms cubic-bezier(.2,.8,.2,1), box-shadow 260ms ease;
+  will-change: transform;
+  display: block;
+}
+
+/* Slightly scale the image on hover for a smooth, subtle effect */
+.gallery-item:hover img {
+  transform: scale(1.04);
 }
 
 .gallery-item p {
@@ -135,10 +196,94 @@ button:hover {
   flex: 1 1 100%;
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: var(--muted);
+  background: transparent;
 }
 
 .placeholder-icon {
   font-size: 48px;
   margin-bottom: 20px;
+}
+
+/* Card hover shadow subtle lift */
+.gallery-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0,0,0,0.55);
+}
+
+/* Make placeholder and modal content text readable on dark background */
+.placeholder p,
+.gallery-item h3,
+.gallery-item p {
+  color: var(--text);
+}
+
+/* Modal content on dark background */
+.modal-content {
+  background: #071822;
+  color: var(--text);
+}
+
+.modal-close {
+  color: var(--text);
+}
+
+/* Modal styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none; /* hidden by default */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.6);
+  z-index: 1000;
+  padding: 20px;
+}
+.modal.show {
+  display: flex;
+}
+.modal-content {
+  background: white;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  border-radius: 8px;
+  padding: 20px;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+.modal-media img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.modal-media .video-note {
+  padding: 10px 0;
+}
+.modal-date {
+  color: #666;
+  margin-top: 8px;
+}
+.modal-explanation {
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* Make all text inside the modal dark */
+.modal-content h2,
+.modal-content p,
+.modal-content a {
+  color: #222;
 }
