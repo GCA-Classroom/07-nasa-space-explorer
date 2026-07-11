@@ -4,6 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>NASA Space Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Public+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet"
+  />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -19,11 +25,26 @@
       <button>Get Space Images</button>
     </div>
 
+    <section class="space-fact" aria-live="polite">
+      <h2>Did You Know?</h2>
+      <p id="randomSpaceFact"></p>
+    </section>
+
     <div id="gallery" class="gallery">
       <div class="placeholder">
         <div class="placeholder-icon">🔭</div>
         <p>Select a date range and click "Get Space Images" to explore the cosmos!</p>
       </div>
+    </div>
+  </div>
+
+  <div id="imageModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-content">
+      <img id="modalImage" src="" alt="" />
+      <h2 id="modalTitle"></h2>
+      <p id="modalDate" class="modal-date"></p>
+      <p id="modalVideoLink" class="modal-video-link hidden"></p>
+      <p id="modalExplanation" class="modal-explanation"></p>
     </div>
   </div>
 
