@@ -105,6 +105,33 @@ button:hover {
   }
 }
 
+.space-fact {
+  margin: 0 20px 12px;
+  padding: 14px 16px;
+  border-left: 6px solid var(--nasa-blue);
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 29, 84, 0.08);
+}
+
+.space-fact h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  color: var(--nasa-blue);
+  margin-bottom: 8px;
+}
+
+.space-fact p {
+  color: var(--text);
+  line-height: 1.5;
+}
+
+@media (min-width: 600px) {
+  .space-fact {
+    margin: 0 0 12px;
+  }
+}
+
 /* Gallery flex container */
 .gallery {
   display: flex;
@@ -151,6 +178,12 @@ button:hover {
   height: 200px;
   object-fit: cover;
   border-radius: 4px;
+  transition: transform 0.35s ease;
+}
+
+.gallery-item:hover img,
+.gallery-item:focus img {
+  transform: scale(1.06);
 }
 
 .gallery-item p {

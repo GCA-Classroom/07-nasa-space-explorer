@@ -9,16 +9,37 @@ const modalTitle = document.getElementById('modalTitle');
 const modalDate = document.getElementById('modalDate');
 const modalVideoLink = document.getElementById('modalVideoLink');
 const modalExplanation = document.getElementById('modalExplanation');
+const randomSpaceFact = document.getElementById('randomSpaceFact');
 
 // NASA APOD API endpoint and public demo key
 const APOD_URL = 'https://api.nasa.gov/planetary/apod';
 const API_KEY = 'DEMO_KEY';
+
+// Fun space facts shown at page load.
+const spaceFacts = [
+	'A day on Venus is longer than a year on Venus.',
+	'Neutron stars can spin more than 600 times each second.',
+	'One million Earths could fit inside the Sun.',
+	'Jupiter has the shortest day of any planet: about 10 hours.',
+	'Light from the Sun takes about 8 minutes and 20 seconds to reach Earth.',
+	'There are more stars in the universe than grains of sand on Earth.',
+	'The footprints left on the Moon can last for millions of years.',
+	'Saturn is so low-density it could float in water (in a giant enough ocean).'
+];
 
 // Call the setupDateInputs function from dateRange.js
 // This sets up the date pickers to:
 // - Default to a range of 9 days (from 9 days ago to today)
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
+
+// Pick one random fact each time the app loads.
+function showRandomSpaceFact() {
+	const randomIndex = Math.floor(Math.random() * spaceFacts.length);
+	randomSpaceFact.textContent = spaceFacts[randomIndex];
+}
+
+showRandomSpaceFact();
 
 // Build one gallery card from APOD data
 function createGalleryItem(imageData) {
