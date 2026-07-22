@@ -5,76 +5,85 @@ const gallery = document.getElementById('gallery');
 const fetchButton = document.getElementById('getImagesButton');
 const modal = document.getElementById('imageModal');
 const closeModalButton = document.getElementById('closeModal');
-const modalImage = document.getElementById('modalImage');
+const modalMedia = document.getElementById('modalMedia');
 const modalTitle = document.getElementById('modalTitle');
 const modalDate = document.getElementById('modalDate');
 const modalExplanation = document.getElementById('modalExplanation');
-const factText = document.getElementById('factText');
 
 // Call the setupDateInputs function from dateRange.js
 // This sets up the date pickers to:
 // - Default to a range of 9 days (from 9 days ago to today)
 // - Restrict dates to NASA's image archive (starting from 1995)
 setupDateInputs(startInput, endInput);
-getRandomFact();
 
-const apiKey = 'DEMO_KEY';
+// Use the requested APOD date range for the default view.
+startInput.value = '2026-07-08';
+endInput.value = '2026-07-17';
+
+const apiKey = 'IRbfeE57sfL9eokc4YjHtmPeSUnWgMkpQr7tnoWU';
 const apiUrl = 'https://api.nasa.gov/planetary/apod';
-const spaceFacts = [
-  'The Sun contains more than 99% of the mass in our solar system.',
-  'A day on Venus is longer than a year on Venus.',
-  'Neutron stars are so dense that a teaspoon of their material would weigh billions of tons.',
-  'Jupiter has a storm larger than Earth that has lasted for hundreds of years.',
-  'Mars has the tallest volcano in the solar system, Olympus Mons.'
-];
-
-function getRandomFact() {
-  const randomIndex = Math.floor(Math.random() * spaceFacts.length);
-  factText.textContent = spaceFacts[randomIndex];
-}
 
 function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
-function openModal(item) {
-  if (item.media_type === 'video') {
-    modalImage.style.display = 'none';
-    modalImage.src = '';
-    modalImage.alt = '';
-    modalTitle.textContent = item.title;
-    modalDate.textContent = item.date;
-    modalExplanation.textContent = item.explanation;
-
-    const existingVideo = document.getElementById('modalVideo');
-    if (existingVideo) {
-      existingVideo.remove();
-    }
-
-    const video = document.createElement('iframe');
-    video.id = 'modalVideo';
-    video.src = item.url;
-    video.title = item.title;
-    video.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-    video.allowFullscreen = true;
-    video.className = 'modal-video';
-
-    const modalBody = document.querySelector('.modal-body');
-    modalBody.insertAdjacentElement('beforebegin', video);
-  } else {
-    modalImage.style.display = 'block';
-    modalImage.src = item.hdurl || item.url;
-    modalImage.alt = item.title;
-
-    const existingVideo = document.getElementById('modalVideo');
-    if (existingVideo) {
-      existingVideo.remove();
-    }
+function getVideoEmbedUrl(url) {
+  if (url.includes('youtube.com/watch?v=')) {
+    const videoId = new URL(url).searchParams.get('v');
+    return `https://www.youtube.com/embed/${videoId}`;
   }
 
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1].split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+
+  return url;
+}
+
+function renderMedia(item, container, isModal = false) {
+  container.innerHTML = '';
+
+  if (item.media_type === 'image') {
+    const image = document.createElement('img');
+    image.src = item.hdurl || item.url;
+    image.alt = item.title;
+    image.className = isModal ? 'modal-image' : 'gallery-image';
+    container.appendChild(image);
+    return;
+  }
+
+  if (item.media_type === 'video') {
+    const iframe = document.createElement('iframe');
+    iframe.src = getVideoEmbedUrl(item.url);
+    iframe.title = item.title;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.className = isModal ? 'modal-video' : 'gallery-video';
+    container.appendChild(iframe);
+
+    const link = document.createElement('a');
+    link.href = item.url;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.textContent = 'Open video in a new tab';
+    container.appendChild(link);
+    return;
+  }
+
+  const fallbackLink = document.createElement('a');
+  fallbackLink.href = item.url;
+  fallbackLink.target = '_blank';
+  fallbackLink.rel = 'noopener noreferrer';
+  fallbackLink.textContent = 'Open media';
+  container.appendChild(fallbackLink);
+}
+
+function openModal(item) {
   modalTitle.textContent = item.title;
   modalDate.textContent = item.date;
   modalExplanation.textContent = item.explanation;
+  renderMedia(item, modalMedia, true);
   modal.classList.remove('hidden');
   modal.setAttribute('aria-hidden', 'false');
 }
@@ -88,7 +97,7 @@ function showLoadingState() {
   gallery.innerHTML = `
     <div class="placeholder">
       <div class="placeholder-icon">🛰️</div>
-      <p>Loading 9 days of APOD images...</p>
+      <p>Loading APOD entries...</p>
     </div>
   `;
 }
@@ -127,42 +136,20 @@ function renderGallery(items) {
     const date = document.createElement('p');
     date.textContent = item.date;
 
-    if (item.media_type === 'image') {
-      const image = document.createElement('img');
-      image.src = item.url;
-      image.alt = item.title;
-      image.className = 'gallery-image';
-      image.addEventListener('click', () => openModal(item));
+    const mediaContainer = document.createElement('div');
+    mediaContainer.className = 'media-container';
+
+    if (item.media_type === 'image' || item.media_type === 'video') {
+      renderMedia(item, mediaContainer);
+      mediaContainer.addEventListener('click', () => openModal(item));
 
       const explanation = document.createElement('p');
       explanation.textContent = item.explanation;
 
       card.appendChild(title);
       card.appendChild(date);
-      card.appendChild(image);
+      card.appendChild(mediaContainer);
       card.appendChild(explanation);
-    } else if (item.media_type === 'video') {
-      const videoPreview = document.createElement('iframe');
-      videoPreview.src = item.url;
-      videoPreview.title = item.title;
-      videoPreview.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-      videoPreview.allowFullscreen = true;
-      videoPreview.className = 'gallery-video';
-
-      const explanation = document.createElement('p');
-      explanation.textContent = item.explanation;
-
-      const link = document.createElement('a');
-      link.href = item.url;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.textContent = 'Open video in a new tab';
-
-      card.appendChild(title);
-      card.appendChild(date);
-      card.appendChild(videoPreview);
-      card.appendChild(explanation);
-      card.appendChild(link);
     } else {
       const mediaMessage = document.createElement('p');
       mediaMessage.textContent = `Media type: ${item.media_type}`;
