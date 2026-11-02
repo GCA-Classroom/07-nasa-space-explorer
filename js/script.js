@@ -17,7 +17,7 @@ let spaceFactOrder = [];
 let spaceFactOrderIndex = 0;
 
 // Your personal NASA API key
-const apiKey = 'd7kQnA7D3ekxe6nr2h4eFvyQeJUV3Q5uM1lpgbbU';
+const apiKey = 'qGPMn9jPWqk8RjHnjw7RrNKCNmLTftqnbjmKRdBK';
 
 // Base APOD endpoint
 const apodUrl = 'https://api.nasa.gov/planetary/apod';
