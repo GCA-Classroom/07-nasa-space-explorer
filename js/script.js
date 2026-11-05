@@ -154,13 +154,13 @@ async function loadImages() {
 const SPACE_FACTS = [
   "A day on Venus (one full rotation) is longer than its year: about 243 Earth days versus about 225 to orbit the Sun.",
   "Sunlight takes roughly 8 minutes and 20 seconds to travel from the Sun to Earth.",
-  "Olympus Mons on Mars, the tallest known volcano in the solar system, rises about 22 km (13.6 miles), roughly two and a half times Mount Everest's height above sea level.",
+  "Olympus Mons on Mars, the tallest known volcano in the solar system, rises about 22 km (13.6 miles) from its base to its summit, roughly two and a half times the height of Mount Everest above sea level (about 8.85 km).",
   "Voyager 1, launched in 1977, is the most distant human-made object and has traveled in interstellar space since 2012.",
   "Mercury completes an orbit around the Sun in just 88 Earth days.",
-  "Saturn is less dense than water, so in a bathtub big enough to hold it, it would float.",
+  "Saturn's average density (about 0.69 g/cm³) is lower than water's, so in theory it would float in a bathtub big enough to hold it. In reality, no such bathtub could exist, and a gas giant wouldn't hold together on water.",
   "The International Space Station circles Earth about every 90 minutes, so astronauts see about 16 sunrises and sunsets a day.",
   "The Moon drifts away from Earth by about 3.8 centimeters (1.5 inches) every year.",
-  "Sunsets on Mars look blue, because fine Martian dust scatters light differently than Earth's air does.",
+  "Martian sunsets show a blue glow around the setting Sun, because fine dust scatters blue light forward toward the viewer. The rest of the Martian sky stays reddish.",
   "Jupiter's Great Red Spot is a giant storm that has been observed for well over a century."
 ];
 
