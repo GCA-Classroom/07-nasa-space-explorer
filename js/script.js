@@ -3,7 +3,7 @@ const startInput = document.getElementById('startDate');
 const endInput = document.getElementById('endDate');
 
 // Call the setupDateInputs function from dateRange.js
-const API_KEY = "MR8B7JgPhhtWk6nHhdwNnLndjpWK9QLF6BkMGJrC";
+const API_KEY = "BDd6HjcdjhCgNPFNDGzpMMMHmJHMBrmwwKrTh7Lp";
 // "2026-11-04" -> "261104" (the legacy date code the endpoint expects)
 function toLegacyCode(dateString) {
   return dateString.slice(2).replace(/-/g, "");
@@ -16,7 +16,7 @@ const statusText = document.getElementById("status");
 const modal = document.getElementById("imageModal");
 const modalTitle = document.getElementById("modalTitle");
 const modalDate = document.getElementById("modalDate");
-const modalImage = document.getElementById("modalImage");
+const modalMedia = document.getElementById("modalMedia");
 const modalCredit = document.getElementById("modalCredit");
 const modalExplanation = document.getElementById("modalExplanation");
  
@@ -41,22 +41,22 @@ function formatDate(dateString) {
 // Safely shows NASA explanation HTML, including clickable links.
 function renderExplanation(container, htmlText) {
   container.replaceChildren();
-
+ 
   const template = document.createElement("template");
   template.innerHTML = htmlText || "";
-
+ 
   template.content.querySelectorAll("script, style, iframe, object, embed")
     .forEach(element => element.remove());
-
+ 
   const allowedTags = ["A", "P", "BR", "STRONG", "B", "EM", "I",
     "UL", "OL", "LI", "DIV", "SPAN"];
-
+ 
   template.content.querySelectorAll("*").forEach(element => {
     if (!allowedTags.includes(element.tagName)) {
       element.replaceWith(...element.childNodes);
       return;
     }
-
+ 
     Array.from(element.attributes).forEach(attribute => {
       if (element.tagName === "A" && attribute.name === "href") {
         return;
@@ -64,7 +64,7 @@ function renderExplanation(container, htmlText) {
       element.removeAttribute(attribute.name);
     });
   });
-
+ 
   template.content.querySelectorAll("a").forEach(link => {
     const href = link.getAttribute("href") || "";
     if (!href.startsWith("http://") &&
@@ -73,11 +73,11 @@ function renderExplanation(container, htmlText) {
       link.removeAttribute("href");
       return;
     }
-
+ 
     link.target = "_blank";
     link.rel = "noopener noreferrer";
   });
-
+ 
   container.append(template.content);
 }
  
@@ -111,7 +111,9 @@ async function loadImages() {
     const items = Array.isArray(json) ? json : [json];
     // The guide says `url` is the post page, not an image, and `hdurl` may be
     // empty, so keep only image items that actually have an hdurl.
-    const images = items.filter(item => item.media_type === "image" && item.hdurl);
+    const images = items.filter(item =>
+      (item.media_type === "image" && item.hdurl) ||
+      item.media_type === "video" || item.media_type === "iframe");
  
     gallery.replaceChildren(); // clear old cards
  
@@ -121,7 +123,7 @@ async function loadImages() {
     }
  
     images.forEach(item => gallery.appendChild(buildCard(item)));
-    setStatus(images.length + " images found. Select one to read more.");
+    setStatus(images.length + " items found. Select one to read more.");
  
   } catch (error) {
     console.error(error);
@@ -131,17 +133,152 @@ async function loadImages() {
   }
 }
  
-// Builds one gallery card from one NASA item.
-function buildCard(item) {
-  const card = document.createElement("article");
-  card.className = "gallery-item";
-  card.tabIndex = 0;                 // lets keyboard users reach it
-  card.setAttribute("role", "button");
+// ---------- "Did you know?" facts ----------
+// Written from commonly cited NASA figures: double-check before publishing.
+const SPACE_FACTS = [
+  "A day on Venus (one full rotation) is longer than its year: about 243 Earth days versus about 225 to orbit the Sun.",
+  "Sunlight takes roughly 8 minutes and 20 seconds to travel from the Sun to Earth.",
+  "Olympus Mons on Mars, the tallest known volcano in the solar system, rises about 22 km (13.6 miles), roughly two and a half times Mount Everest's height above sea level.",
+  "Voyager 1, launched in 1977, is the most distant human-made object and has traveled in interstellar space since 2012.",
+  "Mercury completes an orbit around the Sun in just 88 Earth days.",
+  "Saturn is less dense than water, so in a bathtub big enough to hold it, it would float.",
+  "The International Space Station circles Earth about every 90 minutes, so astronauts see about 16 sunrises and sunsets a day.",
+  "The Moon drifts away from Earth by about 3.8 centimeters (1.5 inches) every year.",
+  "Sunsets on Mars look blue, because fine Martian dust scatters light differently than Earth's air does.",
+  "Jupiter's Great Red Spot is a giant storm that has been observed for well over a century."
+];
  
-  const image = document.createElement("img");
-  image.src = item.hdurl;            // the only image URL the feed provides
-  image.alt = item.title;
-  image.loading = "lazy";            // only download when scrolled near
+function showRandomFact() {
+  // Math.random() gives a decimal from 0 up to (but not including) 1.
+  // Multiplying by the list length stretches that to 0..length, and
+  // Math.floor() chops off the decimals, leaving a valid position in the list.
+  const position = Math.floor(Math.random() * SPACE_FACTS.length);
+  document.getElementById("factText").textContent = SPACE_FACTS[position];
+}
+ 
+// ---------- Media helpers (images and videos) ----------
+ 
+// NASA image links carry ?w=...&h=... . Ask for a smaller width so cards
+// don't download 6000px photos. Untested assumption: if the service ignores
+// this, you just get the original image. Other URLs pass through unchanged.
+function sizedUrl(url, width) {
+  try {
+    const u = new URL(url);
+    if (u.searchParams.has("w")) {
+      u.searchParams.set("w", width);
+      u.searchParams.delete("h");
+    }
+    return u.toString();
+  } catch (error) {
+    return url;
+  }
+}
+ 
+const VIDEO_HOSTS = ["assets.science.nasa.gov", "science.nasa.gov", "apod.nasa.gov"];
+const EMBED_HOSTS = ["www.youtube.com", "www.youtube-nocookie.com", "player.vimeo.com"];
+ 
+// The feed has no "video URL" field, but each item's basic_html contains a
+// <video> or <iframe>. Read it with DOMParser (an inert page: nothing runs or
+// loads), then only accept https links from the allow-listed hosts above.
+function findVideo(item) {
+  const doc = new DOMParser().parseFromString(item.basic_html || "", "text/html");
+ 
+  function clean(raw, hosts) {
+    try {
+      const u = new URL(raw, item.permalink);
+      return (u.protocol === "https:" && hosts.includes(u.hostname)) ? u.href : null;
+    } catch (error) {
+      return null;
+    }
+  }
+ 
+  const file = doc.querySelector("video source[src], video[src]");
+  if (file) {
+    const src = clean(file.getAttribute("src"), VIDEO_HOSTS);
+    if (src) return { kind: "file", src: src };
+  }
+  const frame = doc.querySelector("iframe[src]");
+  if (frame) {
+    const src = clean(frame.getAttribute("src"), EMBED_HOSTS);
+    if (src) return { kind: "frame", src: src };
+  }
+  return null; // no usable player found
+}
+ 
+// Builds the right element for an item: <img>, <video>, <iframe>, or a
+// fallback link to NASA's page. `width` is the image size to request.
+function buildMedia(item, width) {
+  const poster = item.hdurl ? sizedUrl(item.hdurl, width) : "";
+  const altText = item.alt || item.title; // the feed supplies real alt text
+ 
+  if (item.media_type === "image") {
+    const img = document.createElement("img");
+    img.src = poster;
+    img.alt = altText;
+    img.loading = "lazy";
+    return img;
+  }
+ 
+  const video = findVideo(item);
+ 
+  if (video && video.kind === "file") {
+    const el = document.createElement("video");
+    el.controls = true;
+    el.playsInline = true;
+    el.preload = "none";            // don't download until Play is pressed
+    if (poster) el.poster = poster; // still image shown before playing
+    el.src = video.src;
+    el.setAttribute("aria-label", item.title);
+    return el;
+  }
+ 
+  if (video && video.kind === "frame") {
+    const el = document.createElement("iframe");
+    el.src = video.src;
+    el.title = item.title;
+    el.loading = "lazy";
+    el.allowFullscreen = true;
+    el.allow = "fullscreen; picture-in-picture";
+    el.referrerPolicy = "strict-origin-when-cross-origin";
+    el.setAttribute("sandbox", "allow-scripts allow-same-origin allow-presentation allow-popups");
+    return el;
+  }
+ 
+  // Fallback: couldn't find a playable source, so link to NASA's page.
+  const link = document.createElement("a");
+  link.className = "video-fallback";
+  link.href = item.permalink;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  if (poster) {
+    const img = document.createElement("img");
+    img.src = poster;
+    img.alt = "";
+    link.appendChild(img);
+  }
+  const label = document.createElement("span");
+  label.textContent = "Watch on NASA's site \u2197";
+  link.appendChild(label);
+  return link;
+}
+ 
+// ---------- Gallery card ----------
+function buildCard(item) {
+  const isVideo = item.media_type !== "image";
+ 
+  const card = document.createElement("article");
+  card.className = "gallery-item" + (isVideo ? " is-video" : "");
+ 
+  const media = document.createElement("div");
+  media.className = "card-media";
+  media.appendChild(buildMedia(item, 640));
+ 
+  if (isVideo) {
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = "Video";
+    media.appendChild(badge);
+  }
  
   const body = document.createElement("div");
   body.className = "card-body";
@@ -153,13 +290,26 @@ function buildCard(item) {
   date.textContent = formatDate(item.date);
  
   body.append(title, date);
-  card.append(image, body);
  
-  card.addEventListener("click", () => openModal(item, card));
-  card.addEventListener("keydown", (event) => {
+  if (isVideo) {
+    const more = document.createElement("p");
+    more.className = "more";
+    more.textContent = "Read details \u2192";
+    body.appendChild(more);
+  }
+ 
+  card.append(media, body);
+ 
+  // Image cards open the modal when clicked anywhere. Video cards open it from
+  // the text area only, so using the player's controls doesn't trigger it.
+  const opener = isVideo ? body : card;
+  opener.tabIndex = 0;
+  opener.setAttribute("role", "button");
+  opener.addEventListener("click", () => openModal(item, opener));
+  opener.addEventListener("keydown", (event) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      openModal(item, card);
+      openModal(item, opener);
     }
   });
  
@@ -167,17 +317,15 @@ function buildCard(item) {
 }
  
 // ---------- Modal ----------
-function openModal(item, card) {
-  lastFocusedCard = card;
+function openModal(item, opener) {
+  lastFocusedCard = opener;
  
   modalTitle.textContent = item.title;
   modalDate.textContent = formatDate(item.date);
  
-  modalImage.src = item.hdurl;
-  modalImage.alt = item.title;
-  modalImage.hidden = false;
+  modalMedia.className = "modal-media" + (item.media_type === "image" ? "" : " is-video");
+  modalMedia.replaceChildren(buildMedia(item, 1600));
  
-  // NASA says copyrighted images need credit to the owner
   const creditText = item.copyright
     ? "Image credit: " + item.copyright.replace(/\s+/g, " ").trim()
     : "";
@@ -186,7 +334,7 @@ function openModal(item, card) {
  
   modal.classList.add("show");
   modal.setAttribute("aria-hidden", "false");
-  document.body.style.overflow = "hidden"; // stop page scrolling behind modal
+  document.body.style.overflow = "hidden";
   modal.scrollTop = 0;
   document.getElementById("closeModal").focus();
 }
@@ -195,9 +343,8 @@ function closeModal() {
   modal.classList.remove("show");
   modal.setAttribute("aria-hidden", "true");
   document.body.style.overflow = "";
-  modalImage.hidden = true;
-  modalImage.removeAttribute("src");   // avoids the broken-image icon next time
-  if (lastFocusedCard) lastFocusedCard.focus(); // return keyboard users to where they were
+  modalMedia.replaceChildren(); // removing the player also stops any playing video
+  if (lastFocusedCard) lastFocusedCard.focus();
 }
  
 // ---------- Wire up events ----------
@@ -224,3 +371,6 @@ if (typeof setupDateInputs === "function") {
   startInput.value = start.toISOString().slice(0, 10);
   endInput.max = startInput.max = endInput.value;
 }
+ 
+// Pick a random fact each time the page loads
+showRandomFact();

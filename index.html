@@ -33,6 +33,14 @@
     <!-- Screen readers announce changes here (loading, errors) -->
     <p id="status" class="status" role="status" aria-live="polite"></p>
  
+    <section class="fact" aria-labelledby="factTitle">
+      <div class="fact-icon" aria-hidden="true">🚀</div>
+      <div>
+        <h2 id="factTitle">Did you know?</h2>
+        <p id="factText"></p>
+      </div>
+    </section>
+
     <div id="gallery" class="gallery">
       <div class="placeholder">
         <div class="placeholder-icon" aria-hidden="true">🔭</div>
@@ -53,7 +61,7 @@
       <button id="closeModal" class="close-modal" type="button" aria-label="Close">&times;</button>
       <h2 id="modalTitle"></h2>
       <p id="modalDate" class="modal-meta"></p>
-      <img id="modalImage" src="" alt="" hidden />
+      <div id="modalMedia" class="modal-media"></div>
       <p id="modalCredit" class="modal-meta"></p>
       <div id="modalExplanation" class="explanation"></div>
     </div>

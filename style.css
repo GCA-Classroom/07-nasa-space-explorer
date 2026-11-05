@@ -199,3 +199,58 @@ input[type="date"] { background: var(--space); color: var(--text); color-scheme:
   .gallery-item { transition: none; }
   .gallery-item:hover { transform: none; }
 }
+
+/* =================== v2 additions (later rules override earlier ones) =================== */
+
+/* Responsive: columns never force the page wider than a narrow screen */
+body { min-height: 100dvh; }
+.gallery { grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr)); }
+.gallery-item { min-width: 0; }
+.gallery-item h2, .modal-content h2 { overflow-wrap: anywhere; }
+@media (min-width: 1600px) { .container { max-width: 1440px; } }
+@media (max-width: 360px) {
+  body { padding: 10px; }
+  h1 { font-size: 1.6rem; }
+  .filters { padding: 12px; }
+}
+
+/* "Did you know?" panel */
+.fact {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: linear-gradient(135deg, #14214a, var(--panel));
+  border: 1px solid var(--panel-edge);
+  border-left: 4px solid var(--red);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.fact-icon { font-size: 1.6rem; line-height: 1; }
+.fact h2 { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+.fact p { font-size: 1rem; line-height: 1.55; }
+
+/* Card media: fixed 16:10 frame, so images, videos and embeds all fit alike */
+.card-media { position: relative; aspect-ratio: 16 / 10; background: #000; overflow: hidden; }
+.card-media img, .card-media video, .card-media iframe { width: 100%; height: 100%; display: block; border: 0; }
+.card-media img { object-fit: cover; transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.card-media video { object-fit: contain; }
+.badge { position: absolute; top: 10px; left: 10px; z-index: 1; pointer-events: none; background: rgba(10, 14, 26, 0.85); color: #fff; font-size: 0.75rem; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--panel-edge); }
+.is-video { cursor: default; }
+.is-video .card-body { cursor: pointer; }
+.more { color: var(--blue) !important; margin-top: 6px; }
+
+.video-fallback { position: relative; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; color: #fff; text-decoration: none; }
+.video-fallback img { position: absolute; inset: 0; opacity: 0.6; }
+.video-fallback span { position: relative; background: rgba(10, 14, 26, 0.9); padding: 8px 14px; border-radius: 999px; font-size: 0.9rem; }
+
+/* Hover zoom: only on devices that can hover, and not for reduced-motion users */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .gallery-item:hover .card-media img,
+  .gallery-item:focus-within .card-media img { transform: scale(1.08); }
+}
+
+/* Modal media */
+.modal-media { margin: 20px 0 8px; border-radius: 8px; overflow: hidden; background: var(--space); }
+.modal-media.is-video { aspect-ratio: 16 / 9; background: #000; }
+.modal-media img { margin: 0; width: 100%; max-height: min(60vh, 520px); object-fit: contain; display: block; }
+.modal-media video, .modal-media iframe { width: 100%; height: 100%; display: block; border: 0; }
+.modal-media .video-fallback { min-height: 200px; }
