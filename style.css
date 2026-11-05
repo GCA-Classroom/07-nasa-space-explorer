@@ -216,7 +216,10 @@ body { min-height: 100dvh; }
 
 /* "Did you know?" panel */
 .fact {
-  display: flex; gap: 14px; align-items: flex-start;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 44px;
+  gap: 14px;
+  align-items: start;
   background: linear-gradient(135deg, #14214a, var(--panel));
   border: 1px solid var(--panel-edge);
   border-left: 4px solid var(--red);
@@ -224,19 +227,25 @@ body { min-height: 100dvh; }
   padding: 16px 18px;
   margin-bottom: 20px;
 }
-.fact-icon { font-size: 1.6rem; line-height: 1; }
-.fact-content { flex: 1; }
-.fact-regenerate {
+.fact-icon { font-size: 1.6rem; line-height: 44px; text-align: center; }
+.fact-content { min-width: 0; }
+#regenerateFact.fact-regenerate {
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
   width: 44px;
+  height: 44px;
   min-height: 44px;
   padding: 0;
   flex-shrink: 0;
   background: transparent;
-  border-color: transparent;
+  border: 1px solid var(--panel-edge);
+  color: var(--text);
   font-size: 1.25rem;
+  line-height: 1;
   cursor: pointer;
 }
-.fact-regenerate:hover { background: var(--panel-edge); border-color: var(--panel-edge); }
+#regenerateFact.fact-regenerate:hover { background: var(--panel-edge); border-color: var(--blue); }
 .fact h2 { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
 .fact p { font-size: 1rem; line-height: 1.55; }
 
