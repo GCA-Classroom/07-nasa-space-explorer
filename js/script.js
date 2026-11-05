@@ -97,7 +97,16 @@ async function loadImages() {
   url.searchParams.set("per_page", "25"); // the guide's maximum
  
   loadButton.disabled = true;
-  setStatus("Loading images…");
+  setStatus("🔄 Loading space photos…");
+
+  // Show a loading message while the NASA request is in progress.
+  gallery.replaceChildren();
+  const loadingPlaceholder = document.createElement("div");
+  loadingPlaceholder.className = "placeholder";
+  loadingPlaceholder.innerHTML =
+    '<div class="placeholder-icon" aria-hidden="true">🔄</div>' +
+    "<p>Loading space photos…</p>";
+  gallery.appendChild(loadingPlaceholder);
  
   try {
     const response = await fetch(url);
@@ -115,7 +124,7 @@ async function loadImages() {
       (item.media_type === "image" && item.hdurl) ||
       item.media_type === "video" || item.media_type === "iframe");
  
-    gallery.replaceChildren(); // clear old cards
+    gallery.replaceChildren(); // clear the loading message
  
     if (images.length === 0) {
       setStatus("No images in that range (some days are videos). Try different dates.");
@@ -128,6 +137,13 @@ async function loadImages() {
   } catch (error) {
     console.error(error);
     setStatus("Couldn't load images (" + error.message + "). Check your key and dates, then try again.", true);
+    gallery.replaceChildren();
+    const errorPlaceholder = document.createElement("div");
+    errorPlaceholder.className = "placeholder";
+    errorPlaceholder.innerHTML =
+      '<div class="placeholder-icon" aria-hidden="true">⚠️</div>' +
+      "<p>Space photos couldn't be loaded. Please try again.</p>";
+    gallery.appendChild(errorPlaceholder);
   } finally {
     loadButton.disabled = false; // runs on success AND failure
   }
@@ -147,13 +163,19 @@ const SPACE_FACTS = [
   "Sunsets on Mars look blue, because fine Martian dust scatters light differently than Earth's air does.",
   "Jupiter's Great Red Spot is a giant storm that has been observed for well over a century."
 ];
+
+let currentFactIndex = -1;
  
 function showRandomFact() {
-  // Math.random() gives a decimal from 0 up to (but not including) 1.
-  // Multiplying by the list length stretches that to 0..length, and
-  // Math.floor() chops off the decimals, leaving a valid position in the list.
-  const position = Math.floor(Math.random() * SPACE_FACTS.length);
-  document.getElementById("factText").textContent = SPACE_FACTS[position];
+  let position = Math.floor(Math.random() * SPACE_FACTS.length);
+
+  // Keep clicking the button from showing the same fact twice in a row.
+  if (SPACE_FACTS.length > 1 && position === currentFactIndex) {
+    position = (position + 1) % SPACE_FACTS.length;
+  }
+
+  currentFactIndex = position;
+  document.getElementById("factText").textContent = SPACE_FACTS[currentFactIndex];
 }
  
 // ---------- Media helpers (images and videos) ----------
@@ -350,6 +372,7 @@ function closeModal() {
 // ---------- Wire up events ----------
 loadButton.addEventListener("click", loadImages);
 document.getElementById("closeModal").addEventListener("click", closeModal);
+document.getElementById("regenerateFact").addEventListener("click", showRandomFact);
  
 modal.addEventListener("click", (event) => {
   if (event.target === modal) closeModal(); // click on dark backdrop only

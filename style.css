@@ -225,6 +225,18 @@ body { min-height: 100dvh; }
   margin-bottom: 20px;
 }
 .fact-icon { font-size: 1.6rem; line-height: 1; }
+.fact-content { flex: 1; }
+.fact-regenerate {
+  width: 44px;
+  min-height: 44px;
+  padding: 0;
+  flex-shrink: 0;
+  background: transparent;
+  border-color: transparent;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+.fact-regenerate:hover { background: var(--panel-edge); border-color: var(--panel-edge); }
 .fact h2 { font-family: var(--font-head); font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
 .fact p { font-size: 1rem; line-height: 1.55; }
 
