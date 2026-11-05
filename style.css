@@ -20,7 +20,7 @@ body {
   background: radial-gradient(1200px 600px at 50% -10%, #16224a 0%, var(--space) 60%) fixed;
   color: var(--text);
   line-height: 1.5;
-  padding: 20px;
+  padding: clamp(12px, 2vw, 20px);
   min-height: 100vh;
 }
 
@@ -37,6 +37,7 @@ body {
 /* White badge keeps the red logo readable on the dark page; the logo itself is not altered */
 .logo-badge { background: #fff; border-radius: 10px; padding: 10px 14px; flex-shrink: 0; }
 .logo { width: 110px; height: auto; display: block; }
+.header-copy { text-align: left; }
 h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.8rem); line-height: 1.1; }
 .tagline { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
 
@@ -51,16 +52,17 @@ h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 5vw, 2.8rem); line-
   padding: 16px;
   margin-bottom: 16px;
 }
-.field { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
 label { font-size: 0.85rem; color: var(--muted); }
 
 input[type="date"], button {
   font: inherit;
   font-size: 1rem;
-  padding: 10px 14px;
+  padding: 12px 14px;
   border-radius: 8px;
   border: 1px solid var(--panel-edge);
   width: 100%;
+  min-height: 44px;
 }
 input[type="date"] { background: var(--space); color: var(--text); color-scheme: dark; }
 
@@ -80,6 +82,23 @@ input[type="date"] { background: var(--space); color: var(--text); color-scheme:
 @media (min-width: 600px) {
   .filters { flex-direction: row; align-items: flex-end; }
   #loadImages { width: auto; white-space: nowrap; }
+}
+
+@media (max-width: 599px) {
+  .site-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding-top: 20px;
+  }
+  .logo-badge { padding: 8px 12px; }
+  .logo { width: 92px; }
+  .header-copy { text-align: center; }
+  .tagline { max-width: 34ch; margin-inline: auto; }
+  .gallery { grid-template-columns: 1fr; }
+  input[type="date"] { max-width: 100%; }
+  .modal-content h2 { font-size: 1.35rem; }
+  .modal-content img { max-height: 50vh; margin-top: 16px; }
 }
 
 .status { min-height: 1.5em; margin-bottom: 8px; color: var(--muted); text-align: center; }
@@ -123,7 +142,7 @@ input[type="date"] { background: var(--space); color: var(--text); color-scheme:
   z-index: 1000;
   background: rgba(4, 6, 12, 0.85);
   overflow-y: auto;
-  padding: 24px 12px;
+  padding: clamp(12px, 3vw, 24px);
 }
 .modal.show { display: flex; justify-content: center; align-items: flex-start; }
 
@@ -134,7 +153,7 @@ input[type="date"] { background: var(--space); color: var(--text); color-scheme:
   width: 100%;
   max-width: 760px;
   margin: auto;
-  padding: 32px 28px 28px;
+  padding: clamp(20px, 4vw, 32px) clamp(16px, 4vw, 28px) clamp(16px, 4vw, 28px);
   border-radius: var(--radius);
 }
 
@@ -164,8 +183,8 @@ input[type="date"] { background: var(--space); color: var(--text); color-scheme:
   position: absolute;
   top: 10px;
   right: 12px;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   font-size: 28px;
   line-height: 1;
