@@ -3,7 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#061f4a" />
   <title>NASA Space Explorer</title>
+  <link rel="icon" type="image/png" href="img/nasa-worm-logo.png" />
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -16,8 +18,13 @@
     <div class="filters">
       <input type="date" id="startDate" />
       <input type="date" id="endDate" />
-      <button>Get Space Images</button>
+      <button id="getImagesButton" type="button">Get Space Images</button>
     </div>
+
+    <section class="did-you-know" aria-live="polite">
+      <h2>Did You Know?</h2>
+      <p id="didYouKnowFact">Loading a space fact...</p>
+    </section>
 
     <div id="gallery" class="gallery">
       <div class="placeholder">
@@ -27,6 +34,25 @@
     </div>
   </div>
 
+  <div id="imageModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button type="button" class="modal-close" aria-label="Close image">×</button>
+      <img id="modalImage" src="" alt="" />
+      <div class="modal-copy">
+        <h2 id="modalTitle"></h2>
+        <p id="modalDate" class="modal-date"></p>
+        <p id="modalExplanation"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Replace this with your actual NASA API key.
+    // For this demo app, this is the simplest browser-safe setup.
+    // Note: a browser can inspect this value, so do not use this approach for production apps.
+    window.NASA_API_KEY = 'DPtQ7rngBGHQMhdL88QmjkGkhBJckQHgphRc696G';
+  </script>
   <script src="js/dateRange.js"></script>
   <script src="js/script.js"></script>
 </body>
