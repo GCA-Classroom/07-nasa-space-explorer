@@ -184,7 +184,7 @@ button:focus-visible {
   padding: 0;
   background-color: var(--color-white);
   color: var(--color-text);
-  box-shadow: 0 4px 16px rgba(6, 31, 74, 0.3);
+  box-shadow: 0 4px 16px rgba(5, 25, 59, 0.3);
 }
 
 #infoModal::backdrop {
