@@ -179,7 +179,7 @@ button:focus-visible {
   max-height: 80vh;
   margin: auto;
   overflow-y: auto;
-  border: 1px solid #d6d7d9;
+  border: 1px solid #c5c7ca;
   border-radius: 4px;
   padding: 0;
   background-color: var(--color-white);
